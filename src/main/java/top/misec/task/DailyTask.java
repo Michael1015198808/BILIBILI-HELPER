@@ -23,7 +23,7 @@ public class DailyTask {
 
     private final List<Task> dailyTasks =
             Arrays.asList(new UserCheck(),
-                          new VideoWatch(),
+                          //new VideoWatch(),
                           new MangaSign(),
                           new CoinAdd(),
                           new Silver2coin(),
