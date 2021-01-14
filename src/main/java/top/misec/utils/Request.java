@@ -216,9 +216,13 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Logger;
+import top.misec.login.Verify;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 
 /**
@@ -232,7 +236,7 @@ public class Request {
     /**
      * 获取data对象
      */
-    private static final UserData USER_DATA = UserData.getInstance();
+    static Logger logger = (Logger) LogManager.getLogger(HttpUtil.class.getName());
 
     public static String UserAgent = "";
 
@@ -295,7 +299,7 @@ public class Request {
                              .addHeader("connection", "keep-alive")
                              .addHeader("referer", "https://www.bilibili.com/")
                              .addHeader("User-Agent", UserAgent)
-                             .addHeader("Cookie", USER_DATA.getCookie());
+                             .addHeader("Cookie", Verify.getInstance().getVerify());
     }
 
     public static NameValuePair[] getPairList(JSONObject pJson) {
@@ -303,7 +307,7 @@ public class Request {
     }
 
     private static NameValuePair getNameValuePair(Map.Entry<String, Object> entry) {
-        return new BasicNameValuePair(entry.getKey(), StringUtil.get(entry.getValue()));
+        return new BasicNameValuePair(entry.getKey(), Optional.ofNullable(entry.getValue()).map(Object::toString).orElse(null));
     }
 
     public static JSONObject clientExe(HttpUriRequest request) {
@@ -313,7 +317,7 @@ public class Request {
             String respContent = EntityUtils.toString(entity, StandardCharsets.UTF_8);
             return JSON.parseObject(respContent);
         } catch (Exception e) {
-            log.info("💔{}请求错误 : ", request.getMethod(), e);
+            logger.info("💔{}请求错误 : ", request.getMethod(), e);
             return new JSONObject();
         }
     }
@@ -328,7 +332,7 @@ public class Request {
         try{
             Thread.sleep(new Random().nextInt(4)*1000);
         } catch (Exception e){
-            log.warn("等待过程中出错",e);
+            logger.warn("等待过程中出错",e);
         }
     }
 }
