@@ -206,8 +206,6 @@ package top.misec.task;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-import com.google.gson.JsonArray;
-import org.apache.http.client.methods.HttpPatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 import top.misec.config.Config;
@@ -244,7 +242,7 @@ public class GiveGift implements Task {
             /* B站后台时间戳为10位 */
             long nowTime = System.currentTimeMillis()/1000;
             /* 获得礼物列表 */
-            JsonArray jsonArray = xliveGiftBagList();
+            JSONArray jsonArray = xliveGiftBagList();
             /* 判断是否有过期礼物出现 */
             boolean flag = true;
             for(Object object : jsonArray){
@@ -344,10 +342,10 @@ public class GiveGift implements Task {
      * @author srcrs
      * @Time 2020-10-13
      */
-    public JsonArray xliveGiftBagList(){
-        return HttpUtil.doGet("https://api.live.bilibili.com/xlive/web-room/v1/gift/bag_list")
-                .get("data").getAsJsonObject()
-                .get("list").getAsJsonArray();
+    public JSONArray xliveGiftBagList(){
+        return Request.get("https://api.live.bilibili.com/xlive/web-room/v1/gift/bag_list")
+                .getJSONObject("data")
+                .getJSONArray("list");
     }
 
     /**
