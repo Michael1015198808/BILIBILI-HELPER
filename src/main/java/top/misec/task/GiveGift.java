@@ -231,7 +231,7 @@ public class GiveGift implements Task {
     public void run() {
         try{
             /* 从配置类中读取是否需要执行赠送礼物 */
-            if(!config.getGift()){
+            if(!config.isGift()){
                 logger.info("【送即将过期礼物】: 自定义配置不送出即将过期礼物✔");
                 return;
             }
@@ -377,9 +377,9 @@ public class GiveGift implements Task {
         String roomId;
         /* 直播间 uid 即 up 的 id*/
         String uid;
-        if(config.getuplive() != null){
+        if(config.getUplive() != null){
             /* 获取指定up的id */
-            uid = config.getuplive();
+            uid = config.getUplive();
             roomId = getRoomInfoOld(uid);
             String status = "0";
             if(status.equals(roomId)){
