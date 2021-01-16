@@ -40,7 +40,8 @@ public class Config {
     private boolean gift;
 
     /**
-     * 打赏快过期礼物对象
+     * 打赏快过期礼物对象，为http://live.bilibili.com/后的数字
+     * 填0表示随机打赏。
      */
     private String upLive;
 
