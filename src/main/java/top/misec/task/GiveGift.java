@@ -210,7 +210,6 @@ import org.apache.logging.log4j.core.Logger;
 import top.misec.config.Config;
 import top.misec.login.Verify;
 import top.misec.utils.HttpUtil;
-import top.misec.utils.Request;
 
 /**
  * B站直播送出即将过期的礼物
@@ -254,7 +253,7 @@ public class GiveGift implements Task {
                     if("".equals(roomId)) {
                         JsonObject uidAndRid = getuidAndRid();
                         uid = uidAndRid.get("uid").getAsString();
-                        roomId = uidAndRid.get("roomId").getAsString();
+                        roomId = uidAndRid.get("roomid").getAsString();
                     }
                     JsonObject pJson = new JsonObject();
                     pJson.addProperty("biz_id", roomId);
@@ -301,23 +300,17 @@ public class GiveGift implements Task {
     /**
      * B站获取直播间的uid
      * @param roomId up 主的 uid
-     * @return JsonObject
+     * @return String
      * @author srcrs
      * @Time 2020-10-13
      */
     public String xliveGetRoomUid(String roomId){
         JsonObject pJson = new JsonObject();
         pJson.addProperty("room_id", roomId);
-        return Request.get("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom", pJson)
-                .getJSONObject("data")
-                .getJSONObject("room_info")
-                .getString("uid");
-        /*
         return HttpUtil.doGet("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom", pJson)
                 .get("data").getAsJsonObject()
                 .get("room_info").getAsJsonObject()
-                .get("uid").getAsString("uid");
-        */
+                .get("uid").getAsString();
     }
 
     /**
@@ -330,9 +323,9 @@ public class GiveGift implements Task {
     public String getRoomInfoOld(String mid) {
         JsonObject pJson = new JsonObject();
         pJson.addProperty("mid", mid);
-        return Request.get("http://api.live.bilibili.com/room/v1/Room/getRoomInfoOld", pJson)
-                .getJSONObject("data")
-                .getString("roomid");
+        return HttpUtil.doGet("http://api.live.bilibili.com/room/v1/Room/getRoomInfoOld", pJson)
+                .get("data").getAsJsonObject()
+                .get("roomid").getAsString();
     }
 
     /**
@@ -355,14 +348,19 @@ public class GiveGift implements Task {
      * @Time 2020-10-13
      */
     public JsonObject xliveBagSend(JsonObject pJson){
-        pJson.addProperty("uid", Verify.getInstance().getUserId());
-        pJson.addProperty("csrf", Verify.getInstance().getBiliJct());
-        pJson.addProperty("send_ruid", 0);
-        pJson.addProperty("storm_beat_id", 0);
-        pJson.addProperty("price", 0);
-        pJson.addProperty("platform", "pc");
-        pJson.addProperty("biz_code", "live");
-        return Request.post("https://api.live.bilibili.com/gift/v2/live/bag_send", pJson);
+        /*
+        String postBody = "bvid=" + bvid
+                + "&played_time=" + playedTime;
+         */
+        String requestBody =
+                "uid=" + Verify.getInstance().getUserId() +
+                "&csrf" + Verify.getInstance().getBiliJct() +
+                "&send_ruid=" + "0" +
+                "&storm_beat_id=" + "0" +
+                "&price=" + "0" +
+                "&platform=" + "pc" +
+                "&biz_code=" + "live";
+        return HttpUtil.doPost("https://api.live.bilibili.com/gift/v2/live/bag_send", requestBody);
     }
 
     /**
@@ -399,7 +397,7 @@ public class GiveGift implements Task {
         }
         JsonObject json = new JsonObject();
         json.addProperty("uid",uid);
-        json.addProperty("roomId",roomId);
+        json.addProperty("roomid",roomId);
         return json;
     }
 
