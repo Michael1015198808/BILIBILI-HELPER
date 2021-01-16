@@ -3,7 +3,7 @@
   "selectLike": 0,
   "monthEndAutoCharge": true,
   "gift": true,
-  "uplive": null,
+  "upLive": "0",
   "chargeForLove": "0",
   "devicePlatform": "ios",
   "coinAddPriority": 1,

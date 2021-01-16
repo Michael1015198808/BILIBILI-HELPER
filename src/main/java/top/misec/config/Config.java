@@ -42,7 +42,7 @@ public class Config {
     /**
      * 打赏快过期礼物对象
      */
-    private String uplive;
+    private String upLive;
 
     /**
      * 执行客户端操作时的平台 [ios,android]
