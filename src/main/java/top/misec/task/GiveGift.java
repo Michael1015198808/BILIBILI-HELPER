@@ -290,7 +290,7 @@ public class GiveGift implements Task {
      * @Time 2020-10-13
      */
     public String xliveGetRecommend(){
-        return HttpUtil.doGet("https://api.live.bilibili.com/xlive/web-room/v1/gift/bag_list")
+        return HttpUtil.doGet("https://api.live.bilibili.com/relation/v1/AppWeb/getRecommendList")
                 .get("data").getAsJsonObject()
                 .get("list").getAsJsonArray()
                 .get(6).getAsJsonObject()
@@ -335,7 +335,7 @@ public class GiveGift implements Task {
      * @Time 2020-10-13
      */
     public JsonArray xliveGiftBagList(){
-        return HttpUtil.doGet("https://api.live.bilibili.com/relation/v1/AppWeb/getRecommendList")
+        return HttpUtil.doGet("https://api.live.bilibili.com/xlive/web-room/v1/gift/bag_list")
                 .get("data").getAsJsonObject()
                 .get("list").getAsJsonArray();
     }
