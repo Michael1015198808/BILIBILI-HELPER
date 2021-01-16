@@ -230,7 +230,7 @@ public class GiveGift implements Task {
         try{
             /* 从配置类中读取是否需要执行赠送礼物 */
             if(!config.isGift()){
-                logger.info("【送即将过期礼物】: 自定义配置不送出即将过期礼物✔");
+                logger.info("未开启自动送出即将过期礼物功能");
                 return;
             }
             /* 直播间 id */
@@ -267,16 +267,16 @@ public class GiveGift implements Task {
                         String giftName = jsonObject3.get("data").getAsJsonObject().get("gift_name").getAsString();
                         /* 礼物的数量 */
                         String giftNum = jsonObject3.get("data").getAsJsonObject().get("gift_num").getAsString();
-                        logger.info("【送即将过期礼物】: 给直播间 - {} - {} - 数量: {}✔",roomId,giftName,giftNum);
+                        logger.info("给直播间 - {} - {} - 数量: {}✔",roomId,giftName,giftNum);
                         flag = false;
                     }
                     else{
-                        logger.warn("【送即将过期礼物】: 失败, 原因 : {}❌", jsonObject3);
+                        logger.debug("送礼失败, 原因 : {}❌", jsonObject3);
                     }
                 }
             }
             if(flag){
-                logger.info("【送即将过期礼物】: " + "当前无即将过期礼物❌");
+                logger.info("当前无即将过期礼物❌");
             }
         } catch (Exception e){
             logger.error("💔赠送礼物异常 : ", e);
@@ -380,20 +380,20 @@ public class GiveGift implements Task {
             roomId = getRoomInfoOld(uid);
             String status = "0";
             if(status.equals(roomId)){
-                logger.info("【获取直播间】: 自定义up {} 无直播间", uid);
+                logger.info("自定义up {} 无直播间", uid);
                 /* 随机获取一个直播间 */
                 roomId = xliveGetRecommend();
                 uid = xliveGetRoomUid(roomId);
-                logger.info("【获取直播间】: 随机直播间");
+                logger.info("随机直播间");
             } else{
-                logger.info("【获取直播间】: 自定义up {} 的直播间", uid);
+                logger.info("自定义up {} 的直播间", uid);
             }
 
         } else{
             /* 随机获取一个直播间 */
             roomId = xliveGetRecommend();
             uid = xliveGetRoomUid(roomId);
-            logger.info("【获取直播间】: " + "随机直播间");
+            logger.info("随机直播间");
         }
         JsonObject json = new JsonObject();
         json.addProperty("uid",uid);
