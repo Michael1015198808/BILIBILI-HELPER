@@ -285,7 +285,7 @@ public class GiveGift implements Task {
 
     /**
      * 获取一个直播间的room_id
-     * @return JsonObject
+     * @return String
      * @author srcrs
      * @Time 2020-10-13
      */
@@ -330,7 +330,7 @@ public class GiveGift implements Task {
 
     /**
      * B站直播获取背包礼物
-     * @return JsonObject
+     * @return JsonArray
      * @author srcrs
      * @Time 2020-10-13
      */
