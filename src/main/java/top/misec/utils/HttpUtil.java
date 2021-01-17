@@ -1,20 +1,18 @@
 package top.misec.utils;
 
-import com.alibaba.fastjson.JSONObject;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
@@ -31,16 +29,12 @@ import java.util.Optional;
  * @author Junzhou Liu
  * @create 2020/10/11 4:03
  */
-public class HttpUtil {
 
-    static Logger logger = (Logger) LogManager.getLogger(HttpUtil.class.getName());
+@Log4j2
+public class HttpUtil {
 
     private static String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
             "(KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36 Edg/85.0.564.70";
-
-    public static String getUserAgent() {
-        return userAgent;
-    }
 
     public static void setUserAgent(String userAgent) {
         HttpUtil.userAgent = userAgent;
@@ -59,7 +53,8 @@ public class HttpUtil {
 
     static Verify verify = Verify.getInstance();
 
-    HttpUtil() {
+    public static JsonObject doPost(String url, JsonObject jsonObject) {
+        return doPost(url, jsonObject.toString());
 
     }
 
@@ -80,12 +75,14 @@ public class HttpUtil {
           setHeader：设置一个请求头字段，有则覆盖，无则添加。
           有什么好的方式判断key1=value和{"key1":"value"}
          */
-        if (requestBody.startsWith("{")) {
-            //java的正则表达式咋写......
-            httpPost.setHeader("Content-Type", "application/json");
-        } else {
-            httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
-        }
+//        if (requestBody.startsWith("{")) {
+//            //java的正则表达式咋写......
+//            httpPost.setHeader("Content-Type", "application/json");
+//        } else {
+//            httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+//        }
+        httpPost.setHeader("accept", "application/json, text/plain, */*");
+        httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
         httpPost.setHeader("Referer", "https://www.bilibili.com/");
         httpPost.setHeader("Connection", "keep-alive");
         httpPost.setHeader("User-Agent", userAgent);
@@ -108,13 +105,13 @@ public class HttpUtil {
                     String result = EntityUtils.toString(entity);
                     resultJson = new JsonParser().parse(result).getAsJsonObject();
                 } else {
-                    logger.debug(httpPostResponse.getStatusLine().toString());
+                    log.debug(httpPostResponse.getStatusLine().toString());
                 }
             } else {
-                logger.debug("httpPostResponse null");
+                log.debug("httpPostResponse null");
             }
         } catch (Exception e) {
-            logger.error(e);
+            log.error(e);
             e.printStackTrace();
         } finally {
             // 关闭资源
@@ -164,9 +161,9 @@ public class HttpUtil {
                 String result = EntityUtils.toString(entity);
                 resultJson = new JsonParser().parse(result).getAsJsonObject();
             } else if (responseStatusCode == 412) {
-                logger.info("出了一些问题，请在自定义配置中更换UA");
+                log.info("出了一些问题，请在自定义配置中更换UA");
             } else {
-                logger.debug(httpGetResponse.getStatusLine().toString());
+                log.debug(httpGetResponse.getStatusLine().toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
