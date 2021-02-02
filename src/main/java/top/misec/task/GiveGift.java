@@ -116,22 +116,6 @@ public class GiveGift implements Task {
     }
 
     /**
-     * 根据 uid 获取其 roomid
-     *
-     * @param mid 即 uid
-     * @return String 返回一个直播间id
-     * @author srcrs
-     * @Time 2020-11-20
-     */
-    public String getRoomInfoOld(String mid) {
-        JsonObject pJson = new JsonObject();
-        pJson.addProperty("mid", Integer.parseInt(mid));
-        return HttpUtil.doGet("http://api.live.bilibili.com/room/v1/Room/getRoomInfoOld", pJson)
-                .get("data").getAsJsonObject()
-                .get("roomid").getAsString();
-    }
-
-    /**
      * B站直播获取背包礼物
      *
      * @return JsonArray
@@ -179,25 +163,15 @@ public class GiveGift implements Task {
         String uid;
         if (!config.getUpLive().equals("0")) {
             /* 获取指定up的id */
-            uid = config.getUpLive();
-            roomId = getRoomInfoOld(uid);
-            String status = "0";
-            if (status.equals(roomId)) {
-                log.info("自定义up {} 无直播间", uid);
-                /* 随机获取一个直播间 */
-                roomId = xliveGetRecommend();
-                uid = xliveGetRoomUid(roomId);
-                log.info("随机直播间");
-            } else {
-                log.info("自定义up {} 的直播间", uid);
-            }
-
+            roomId = config.getUpLive();
+            log.info("自定义up {} 的直播间", uid);
         } else {
             /* 随机获取一个直播间 */
             roomId = xliveGetRecommend();
-            uid = xliveGetRoomUid(roomId);
             log.info("随机直播间");
         }
+        uid = xliveGetRoomUid(roomId);
+
         JsonObject json = new JsonObject();
         json.addProperty("uid", uid);
         json.addProperty("roomid", roomId);
