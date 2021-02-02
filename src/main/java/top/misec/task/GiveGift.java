@@ -159,18 +159,17 @@ public class GiveGift implements Task {
     public JsonObject getuidAndRid() {
         /* 直播间 id */
         String roomId;
-        /* 直播间 uid 即 up 的 id*/
-        String uid;
         if (!config.getUpLive().equals("0")) {
             /* 获取指定up的id */
             roomId = config.getUpLive();
-            log.info("自定义up {} 的直播间", uid);
+            log.info("自定义up {} 的直播间", roomId);
         } else {
             /* 随机获取一个直播间 */
             roomId = xliveGetRecommend();
             log.info("随机直播间");
         }
-        uid = xliveGetRoomUid(roomId);
+        /* 直播间 uid 即 up 的 id*/
+        String uid = xliveGetRoomUid(roomId);
 
         JsonObject json = new JsonObject();
         json.addProperty("uid", uid);
